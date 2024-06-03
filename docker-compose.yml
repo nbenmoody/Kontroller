@@ -1,0 +1,7 @@
+﻿services:
+  kontroller-1:
+    image: nbmoody/kontroller:latest
+    build:
+      context: src/Kontroller.API/
+    ports:
+      - "8080:8080"
