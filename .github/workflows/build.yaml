@@ -13,7 +13,7 @@ jobs:
     name: Run GitVersion
     runs-on: ubuntu-latest
     outputs:
-      semver: ${{ steps.gitversion.outputs.majorMinorPatch }}
+      semver: ${{ steps.gitversion.outputs.SemVer }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "### Version" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**${{ steps.gitversion.outputs.majorMinorPatch }}**" >> $GITHUB_STEP_SUMMARY
+          echo "**${{ steps.gitversion.outputs.SemVer }}**" >> $GITHUB_STEP_SUMMARY
       
   build-docker-image:
     name: Build and Push Image
