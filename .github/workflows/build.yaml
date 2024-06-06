@@ -68,4 +68,4 @@ jobs:
           echo "### Image Built" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**${{ env.image-name-and-tag }}**" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.build-and-push.outputs.metadata }} >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.build-and-push.outputs.imageid}}" >> $GITHUB_STEP_SUMMARY
