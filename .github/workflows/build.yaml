@@ -31,11 +31,11 @@ jobs:
       - name: Output Version
         run: |
           echo "### Version" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "**${{ steps.gitversion.outputs.majorMinorPatch }}**" >> $GITHUB_STEP_SUMMARY
       
   build-docker-image:
-    name: Build Docker Image
+    name: Build and Push Image
     runs-on: ubuntu-latest
     env:
       image-name-and-tag: nbmoody/Kontroller:${{ needs.version.outputs.semver }}
@@ -61,3 +61,9 @@ jobs:
           file: src/Kontroller.API/Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: nbmoody/Kontroller:latest,${{ env.image-name-and-tag }}
+      - name: Output Image
+        run: |
+          echo "### Image Built" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**${{ env.image-name-and-tag }}**" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.build-and-push.outputs.metadata }} >> $GITHUB_STEP_SUMMARY
