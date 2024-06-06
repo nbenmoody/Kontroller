@@ -59,6 +59,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: false # TODO: set true when ready
+          context: src/Kontroller.API
           file: src/Kontroller.API/Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: nbmoody/kontroller-api:latest,${{ env.image-name-and-tag }}
