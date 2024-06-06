@@ -61,7 +61,7 @@ jobs:
           push: false # TODO: set true when ready
           context: src/Kontroller.API
           file: src/Kontroller.API/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: nbmoody/kontroller-api:latest,${{ env.image-name-and-tag }}
       - name: Output Image
         run: |
