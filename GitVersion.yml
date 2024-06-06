@@ -1,0 +1,16 @@
+mode: ContinuousDelivery
+branches:
+  pull-request:
+    mode: ContinuousDeployment
+    tag: pr-
+    track-merge-target: true
+  main:
+    mode: ContinuousDelivery
+    tag: ''
+    increment: Patch
+    track-merge-target: false
+    is-mainline: true
+ignore:
+  sha: []
+merge-message-formats: {}
+tag-prefix: ""

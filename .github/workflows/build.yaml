@@ -9,10 +9,41 @@ on:
       - main
 
 jobs:
+  version:
+    name: Run GitVersion
+    runs-on: ubuntu-latest
+    outputs:
+      semver: ${{ steps.gitversion.outputs.majorMinorPatch }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v1.1.1
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v1.1.1
+        with:
+          useConfigFile: true
+      - name: Output Version
+        run: |
+          echo "### Version" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "**${{ steps.gitversion.outputs.majorMinorPatch }}**" >> $GITHUB_STEP_SUMMARY
+      
   build-docker-image:
     name: Build Docker Image
     runs-on: ubuntu-latest
+    env:
+      image-name-and-tag: nbmoody/Kontroller:${{ needs.version.outputs.semver }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -23,7 +54,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
+        id: build-and-push
         uses: docker/build-push-action@v5
         with:
-          push: false
-          tags: nbmoody/Kontroller:latest
+          push: false # TODO: set true when ready
+          file: src/Kontroller.API/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          tags: nbmoody/Kontroller:latest,${{ env.image-name-and-tag }}
