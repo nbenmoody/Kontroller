@@ -1,8 +1,8 @@
-using k8s.Models;
+using Kontroller.API.Versions;
 
 namespace Kontroller.API.Services;
 
 internal interface IKubernetesService : IDisposable
 {
-    public Task<V1DeploymentList> GetDeployments();
+    public Task<TargetVersion[]> GetDeployments();
 }
