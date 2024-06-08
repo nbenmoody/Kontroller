@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Kontroller.API.Versions;
 
-internal class VersionEndpoints(IKubernetesService kubernetes)
+internal static class VersionEndpoints
 {
     internal static List<Version> fakeVersionDb =
     [
@@ -13,15 +13,15 @@ internal class VersionEndpoints(IKubernetesService kubernetes)
         new Version("Deployment 4", "0.13.2"),
     ];
 
-    internal void RegisterEndpoints(WebApplication app)
+    internal static void RegisterEndpoints(WebApplication app)
     {
         var versions = app.MapGroup("/versions");
         versions.MapGet("/", GetVersions);
     }
 
-    private Results<Ok<Version[]>, NotFound> GetVersions()
+    private static Results<Ok<Version[]>, NotFound> GetVersions()
     {
-        kubernetes.Dispose(); // TODO: This is just a placeholder. Obviously do actual things with this.
+        // kubernetes.Dispose(); // TODO: This is just a placeholder. Obviously do actual things with this.
         
         return fakeVersionDb.Count > 0
             ? TypedResults.Ok(fakeVersionDb.ToArray())

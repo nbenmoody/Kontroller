@@ -16,10 +16,14 @@ public static class Program
         try
         {
             var app = BuildWebHost();
-            app.MapHealthChecks("/healthz");
+
+            app.MapHealthChecks("/health");
             TodoEndpoints.RegisterEndpoints(app);
-            var versionEndpoints = new VersionEndpoints();
-            versionEndpoints.RegisterEndpoints(app);
+            VersionEndpoints.RegisterEndpoints(app);
+            
+            ExemplifyServiceLifetime(app.Services, "Lifetime 1");
+            ExemplifyServiceLifetime(app.Services, "Lifetime 2");
+
             app.Run();
             return 0;
         }
@@ -48,11 +52,33 @@ public static class Program
             .AddJsonFile($"appsettings.{env}.json", true,
                 true)
             .AddEnvironmentVariables();
-        
+
         builder.Services.AddHealthChecks();
-        builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
+        builder.Services.AddTransient<IExampleTransientService, ExampleTransientService>();
+        builder.Services.AddScoped<IExampleScopedService, ExampleScopedService>();
+        builder.Services.AddSingleton<IExampleSingletonService, ExampleSingletonService>();
+        builder.Services.AddTransient<ServiceLifetimeReporter>();
+        // builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
 
         return builder.Build();
+    }
+
+
+    static void ExemplifyServiceLifetime(IServiceProvider hostProvider, string lifetime)
+    {
+        using IServiceScope serviceScope = hostProvider.CreateScope();
+        IServiceProvider provider = serviceScope.ServiceProvider;
+        ServiceLifetimeReporter logger = provider.GetRequiredService<ServiceLifetimeReporter>();
+        logger.ReportServiceLifetimeDetails(
+            $"{lifetime}: Call 1 to provider.GetRequiredService<ServiceLifetimeReporter>()");
+
+        Console.WriteLine("...");
+
+        logger = provider.GetRequiredService<ServiceLifetimeReporter>();
+        logger.ReportServiceLifetimeDetails(
+            $"{lifetime}: Call 2 to provider.GetRequiredService<ServiceLifetimeReporter>()");
+
+        Console.WriteLine();
     }
 }
 

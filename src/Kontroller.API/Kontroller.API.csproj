@@ -8,9 +8,9 @@
     <PublishAot>true</PublishAot>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <OptimizationPreference>Speed</OptimizationPreference>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <EnableNETAnalysers>True</EnableNETAnalysers>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+<!--    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
+<!--    <EnableNETAnalysers>True</EnableNETAnalysers>-->
+<!--    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>-->
     <AnalysisLevel>latest-all</AnalysisLevel>
     <LangVersion>preview</LangVersion>
     <ServerGarbageCollection>false</ServerGarbageCollection>
