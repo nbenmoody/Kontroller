@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using Kontroller.API.Services;
 using Kontroller.API.Todos;
+using Kontroller.API.Versions;
 
 namespace Kontroller.API;
 
@@ -16,6 +18,8 @@ public static class Program
             var app = BuildWebHost();
             app.MapHealthChecks("/healthz");
             TodoEndpoints.RegisterEndpoints(app);
+            var versionEndpoints = new VersionEndpoints();
+            versionEndpoints.RegisterEndpoints(app);
             app.Run();
             return 0;
         }
@@ -44,7 +48,9 @@ public static class Program
             .AddJsonFile($"appsettings.{env}.json", true,
                 true)
             .AddEnvironmentVariables();
+        
         builder.Services.AddHealthChecks();
+        builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
 
         return builder.Build();
     }

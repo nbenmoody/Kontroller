@@ -3,24 +3,24 @@ using k8s.Models;
 
 namespace Kontroller.API.Services;
 
-internal class KubernetesService : IDisposable
+internal sealed class KubernetesService : IKubernetesService
 {
     private readonly KubernetesClientConfiguration _config = k8s.KubernetesClientConfiguration.InClusterConfig();
-    private readonly Kubernetes _client;
+    internal readonly Kubernetes client;
 
     public KubernetesService()
     {
-        _client = new Kubernetes(_config);
+        client = new Kubernetes(_config);
     }
 
     public void Dispose()
     {
-        _client.Dispose();
+        client.Dispose();
     }
 
     public async Task<V1DeploymentList> GetDeployments()
     {
-        var deployments = await _client.ListDeploymentForAllNamespacesAsync();
+        var deployments = await client.ListDeploymentForAllNamespacesAsync();
         return deployments;
     }
 
