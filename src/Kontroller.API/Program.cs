@@ -53,6 +53,7 @@ public static class Program
                 true)
             .AddEnvironmentVariables();
 
+        // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
         builder.Services.AddHealthChecks();
         builder.Services.AddTransient<IExampleTransientService, ExampleTransientService>();
         builder.Services.AddScoped<IExampleScopedService, ExampleScopedService>();
