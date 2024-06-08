@@ -23,6 +23,8 @@ public static class Program
             
             ExemplifyServiceLifetime(app.Services, "Lifetime 1");
             ExemplifyServiceLifetime(app.Services, "Lifetime 2");
+            
+            Console.WriteLine("noëlle moody"); // Save. Noëlle's first line of code.
 
             app.Run();
             return 0;
@@ -54,13 +56,13 @@ public static class Program
             .AddEnvironmentVariables();
 
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
-        builder.Services.AddHealthChecks();
+        builder.Services.AddHealthChecks();    
         builder.Services.AddTransient<IExampleTransientService, ExampleTransientService>();
         builder.Services.AddScoped<IExampleScopedService, ExampleScopedService>();
         builder.Services.AddSingleton<IExampleSingletonService, ExampleSingletonService>();
         builder.Services.AddTransient<ServiceLifetimeReporter>();
-        // builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
 
+        builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
         return builder.Build();
     }
 
