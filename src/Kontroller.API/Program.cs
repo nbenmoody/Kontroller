@@ -14,6 +14,7 @@ public static class Program
         try
         {
             var app = BuildWebHost();
+            app.MapHealthChecks("/healthz");
             TodoEndpoints.RegisterEndpoints(app);
             app.Run();
             return 0;
@@ -43,6 +44,7 @@ public static class Program
             .AddJsonFile($"appsettings.{env}.json", true,
                 true)
             .AddEnvironmentVariables();
+        builder.Services.AddHealthChecks();
 
         return builder.Build();
     }
