@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using Kontroller.API.Services;
 using Kontroller.API.Todos;
+using Kontroller.API.Versions;
 
 namespace Kontroller.API;
 
@@ -13,9 +15,18 @@ public static class Program
     {
         try
         {
+            // Init
             var app = BuildWebHost();
+
+            // Register
             app.MapHealthChecks("/healthz");
             TodoEndpoints.RegisterEndpoints(app);
+            var versionEndpoints = new VersionEndpoints(app.Services.GetRequiredService<KubernetesService>());
+            versionEndpoints.RegisterEndpoints(app);
+            
+            // Run
+            Console.WriteLine("noëlle moody"); // Save. Noëlle's first line of code.
+            Console.WriteLine("bunny moody");
             app.Run();
             return 0;
         }
@@ -44,8 +55,11 @@ public static class Program
             .AddJsonFile($"appsettings.{env}.json", true,
                 true)
             .AddEnvironmentVariables();
-        builder.Services.AddHealthChecks();
 
+        // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
+        builder.Services.AddHealthChecks();    
+        builder.Services.AddSingleton<KubernetesService>();
+        
         return builder.Build();
     }
 }
@@ -53,6 +67,9 @@ public static class Program
 [JsonSerializable(typeof(Todo))]
 [JsonSerializable(typeof(Todo[]))]
 [JsonSerializable(typeof(List<Todo>))]
+[JsonSerializable(typeof(TargetVersion))]
+[JsonSerializable(typeof(TargetVersion[]))]
+[JsonSerializable(typeof(List<TargetVersion>))]
 internal sealed partial class SourceGenerationContext : JsonSerializerContext
 {
 }
