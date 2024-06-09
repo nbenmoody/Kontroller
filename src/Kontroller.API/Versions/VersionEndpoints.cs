@@ -1,11 +1,12 @@
+using System.Runtime.CompilerServices;
 using Kontroller.API.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Kontroller.API.Versions;
 
-internal class VersionEndpoints(IKubernetesService kubernetesService) // TODO: How do I make use of the DI'd service, here?`
+internal class VersionEndpoints(IKubernetesService _kubernetesService)
 {
-    internal static List<TargetVersion> fakeVersionDb =
+    private readonly List<TargetVersion> _fakeVersionDb =
     [
         new TargetVersion("Deployment 1", "1.1.0"),
         new TargetVersion("Deployment 2", "2.1.0"),
@@ -13,18 +14,22 @@ internal class VersionEndpoints(IKubernetesService kubernetesService) // TODO: H
         new TargetVersion("Deployment 4", "0.13.2"),
     ];
 
-    internal static void RegisterEndpoints(WebApplication app)
+    internal void RegisterEndpoints(WebApplication app)
     {
         var versions = app.MapGroup("/versions");
         versions.MapGet("/", GetVersions);
     }
 
-    private static Results<Ok<TargetVersion[]>, NotFound> GetVersions()
+    private Results<Ok<TargetVersion[]>, NotFound> GetFakeVersions()
     {
-        
-        return fakeVersionDb.Count > 0
-            ? TypedResults.Ok(fakeVersionDb.ToArray())
+        return _fakeVersionDb.Count > 0
+            ? TypedResults.Ok(_fakeVersionDb.ToArray())
             : TypedResults.NotFound();
     }
-}
 
+    private Results<Ok<TargetVersion[]>, NotFound> GetVersions()
+    {
+        _kubernetesService.Dispose(); // TODO: Actually use this, eventually. For now this is just allowing me to get started with a pattern for DI.
+        return this.GetFakeVersions();
+    }
+}
