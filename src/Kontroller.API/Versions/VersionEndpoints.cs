@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Kontroller.API.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Kontroller.API.Versions;
 
@@ -27,11 +28,13 @@ internal class VersionEndpoints(IKubernetesService _kubernetesService)
             : TypedResults.NotFound();
     }
 
-    private Results<Ok<TargetVersion[]>, NotFound> GetVersions()
+    private async Task<Results<Ok<TargetVersion[]>, NotFound>> GetVersions()
     {
-        _kubernetesService.Dispose(); // TODO: Actually use this, eventually. For now this is just allowing me to get started with a pattern for DI.
-        return _fakeVersionDb.Count > 0
-            ? TypedResults.Ok(_fakeVersionDb.ToArray())
-            : TypedResults.NotFound();
+        var results = await _kubernetesService.GetDeployments();
+        foreach (var result in results)
+        {
+            Console.WriteLine($"{result.Name} - {result.VersionNumber}");
+        }
+        return results.IsNullOrEmpty() ? TypedResults.NotFound() : TypedResults.Ok(results);
     }
 }

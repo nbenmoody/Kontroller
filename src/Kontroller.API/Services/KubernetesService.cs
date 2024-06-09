@@ -8,7 +8,7 @@ namespace Kontroller.API.Services;
 
 internal sealed class KubernetesService : IKubernetesService
 {
-    private readonly KubernetesClientConfiguration _config = KubernetesClientConfiguration.InClusterConfig();
+    private readonly KubernetesClientConfiguration _config = KubernetesClientConfiguration.BuildDefaultConfig();
     private readonly Kubernetes _client;
     private static readonly string FIRST_VERSION_LABEL = "app.kubernetes.io/version";
     private static readonly string SECOND_VERSION_LABEL = "app/version";
