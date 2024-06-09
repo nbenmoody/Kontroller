@@ -15,15 +15,18 @@ public static class Program
     {
         try
         {
+            // Init
             var app = BuildWebHost();
 
+            // Register
             app.MapHealthChecks("/health");
             TodoEndpoints.RegisterEndpoints(app);
-            VersionEndpoints.RegisterEndpoints(app);
+            var versionEndpoints = new VersionEndpoints(app.Services.GetRequiredService<KubernetesService>());
+            versionEndpoints.RegisterEndpoints(app);
             
+            // Run
             Console.WriteLine("noëlle moody"); // Save. Noëlle's first line of code.
             Console.WriteLine("bunny moody");
-            
             app.Run();
             return 0;
         }
@@ -55,7 +58,7 @@ public static class Program
 
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
         builder.Services.AddHealthChecks();    
-        builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
+        builder.Services.AddSingleton<KubernetesService>();
         
         return builder.Build();
     }
