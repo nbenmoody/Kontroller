@@ -30,6 +30,8 @@ internal class VersionEndpoints(IKubernetesService _kubernetesService)
     private Results<Ok<TargetVersion[]>, NotFound> GetVersions()
     {
         _kubernetesService.Dispose(); // TODO: Actually use this, eventually. For now this is just allowing me to get started with a pattern for DI.
-        return this.GetFakeVersions();
+        return _fakeVersionDb.Count > 0
+            ? TypedResults.Ok(_fakeVersionDb.ToArray())
+            : TypedResults.NotFound();
     }
 }

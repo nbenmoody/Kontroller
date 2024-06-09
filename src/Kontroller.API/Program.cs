@@ -19,7 +19,7 @@ public static class Program
             var app = BuildWebHost();
 
             // Register
-            app.MapHealthChecks("/health");
+            app.MapHealthChecks("/healthz");
             TodoEndpoints.RegisterEndpoints(app);
             var versionEndpoints = new VersionEndpoints(app.Services.GetRequiredService<KubernetesService>());
             versionEndpoints.RegisterEndpoints(app);
@@ -67,6 +67,9 @@ public static class Program
 [JsonSerializable(typeof(Todo))]
 [JsonSerializable(typeof(Todo[]))]
 [JsonSerializable(typeof(List<Todo>))]
+[JsonSerializable(typeof(TargetVersion))]
+[JsonSerializable(typeof(TargetVersion[]))]
+[JsonSerializable(typeof(List<TargetVersion>))]
 internal sealed partial class SourceGenerationContext : JsonSerializerContext
 {
 }
