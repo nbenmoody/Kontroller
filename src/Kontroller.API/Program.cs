@@ -21,12 +21,13 @@ public static class Program
             // Register
             app.MapHealthChecks("/healthz");
             TodoEndpoints.RegisterEndpoints(app);
-            var versionEndpoints = new VersionEndpoints(app.Services.GetRequiredService<KubernetesService>());
+            var versionEndpoints = new VersionEndpoints();
             versionEndpoints.RegisterEndpoints(app);
             
             // Run
             Console.WriteLine("noëlle moody"); // Save. Noëlle's first line of code.
             Console.WriteLine("bunny moody");
+            Console.WriteLine($"Running the application as if it's in this env: {app.Environment.EnvironmentName}");
             app.Run();
             return 0;
         }

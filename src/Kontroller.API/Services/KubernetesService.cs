@@ -28,33 +28,36 @@ internal sealed class KubernetesService : IKubernetesService
 
     private static Result<string> DiscernDeploymentVersion(V1Deployment deployment)
     {
+        Result<string> result;
+        
         var metadata = deployment.EnsureMetadata();
         if (metadata is null)
-            return Result.Fail("No metadata found for deployment");
-        if (!metadata.Labels.Any())
-            return Result.Fail("No labels found within the Deployment metadata.");
-        if (metadata.Labels.Keys.Contains(FIRST_VERSION_LABEL))
-            return Result.Ok(metadata.Labels[FIRST_VERSION_LABEL]);
-        if (metadata.Labels.Keys.Contains(SECOND_VERSION_LABEL))
-            return Result.Ok(metadata.Labels[SECOND_VERSION_LABEL]);
-        if (metadata.Labels.Keys.Contains(THIRD_VERSION_LABEL))
-            return Result.Ok(metadata.Labels[THIRD_VERSION_LABEL]);
+            result = Result.Fail("No metadata found for deployment");
+        else if (!metadata.Labels.Any())
+            result = Result.Fail("No labels found within the Deployment metadata.");
+        else if (metadata.Labels.Keys.Contains(FIRST_VERSION_LABEL))
+            result = Result.Ok(metadata.Labels[FIRST_VERSION_LABEL]);
+        else if (metadata.Labels.Keys.Contains(SECOND_VERSION_LABEL))
+            result = Result.Ok(metadata.Labels[SECOND_VERSION_LABEL]);
+        else if (metadata.Labels.Keys.Contains(THIRD_VERSION_LABEL))
+            result = Result.Ok(metadata.Labels[THIRD_VERSION_LABEL]);
 
-        return Result.Fail("Not able to discern the version from the deployment");
+        result = Result.Fail("Not able to discern the version from the deployment");
+        return result;
     }
 
     public async Task<TargetVersion[]> GetDeployments()
     {
-        _logger.LogDebug("Searching for Deployments...");
+        _logger.LogInformation("Searching for Deployments...");
         var deployments = await _client.ListDeploymentForAllNamespacesAsync();
-        _logger.LogDebug($"Found {deployments.Items.Count} Deployments...");
+        _logger.LogInformation($"Found {deployments.Items.Count} Deployments...");
         
         TargetVersion[] versions = [];
         if (deployments.Items.Any())
         {
             foreach (var deployment in deployments.Items)
             {
-                _logger.LogDebug($"Found a Deployment: {deployment.Name()}");
+                _logger.LogInformation($"Found a Deployment: {deployment.Name()}");
                 var result = DiscernDeploymentVersion(deployment);
                 if (result.IsSuccess)
                 {
