@@ -43,24 +43,24 @@ internal sealed class KubernetesService : IKubernetesService
 
     public async Task<TargetVersion[]> GetDeployments()
     {
-        // var deployments = await _client.ListDeploymentForAllNamespacesAsync();
-        //
+        var deployments = await _client.ListDeploymentForAllNamespacesAsync();
+        
         TargetVersion[] versions = [];
-        // if (deployments.Items.Any())
-        // {
-        //     foreach (var deployment in deployments.Items)
-        //     {
-        //         var result = DiscernDeploymentVersion(deployment);
-        //         if (result.IsSuccess)
-        //         {
-        //             versions.Append(new TargetVersion(deployment.Name(), result.Value));
-        //         }
-        //         else
-        //         {
-        //             Console.Write($"Could not discern version for Deployment: {deployment.Name}");
-        //         }
-        //     }
-        // }
+        if (deployments.Items.Any())
+        {
+            foreach (var deployment in deployments.Items)
+            {
+                var result = DiscernDeploymentVersion(deployment);
+                if (result.IsSuccess)
+                {
+                    versions.Append(new TargetVersion(deployment.Name(), result.Value));
+                }
+                else
+                {
+                    Console.Write($"Could not discern version for Deployment: {deployment.Name}");
+                }
+            }
+        }
 
         return versions;
     }
