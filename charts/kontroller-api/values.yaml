@@ -12,6 +12,8 @@ image:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+  
+aspnetcore_env: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

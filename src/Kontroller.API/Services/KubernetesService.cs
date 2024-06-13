@@ -45,16 +45,16 @@ internal sealed class KubernetesService : IKubernetesService
 
     public async Task<TargetVersion[]> GetDeployments()
     {
-        _logger.LogInformation("Searching for Deployments...");
+        _logger.LogDebug("Searching for Deployments...");
         var deployments = await _client.ListDeploymentForAllNamespacesAsync();
-        _logger.LogInformation($"Found {deployments.Items.Count} Deployments...");
+        _logger.LogDebug($"Found {deployments.Items.Count} Deployments...");
         
         TargetVersion[] versions = [];
         if (deployments.Items.Any())
         {
             foreach (var deployment in deployments.Items)
             {
-                _logger.LogInformation($"Found a Deployment: {deployment.Name()}");
+                _logger.LogDebug($"Found a Deployment: {deployment.Name()}");
                 var result = DiscernDeploymentVersion(deployment);
                 if (result.IsSuccess)
                 {
