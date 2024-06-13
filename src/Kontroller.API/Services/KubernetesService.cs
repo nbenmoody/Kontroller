@@ -35,11 +35,11 @@ internal sealed class KubernetesService : IKubernetesService
             result = Result.Fail("No metadata found for deployment");
         else if (!metadata.Labels.Any())
             result = Result.Fail("No labels found within the Deployment metadata.");
-        else if (metadata.Labels.Keys.Contains(FIRST_VERSION_LABEL))
+        else if (metadata.Labels.ContainsKey(FIRST_VERSION_LABEL))
             result = Result.Ok(metadata.Labels[FIRST_VERSION_LABEL]);
-        else if (metadata.Labels.Keys.Contains(SECOND_VERSION_LABEL))
+        else if (metadata.Labels.ContainsKey(SECOND_VERSION_LABEL))
             result = Result.Ok(metadata.Labels[SECOND_VERSION_LABEL]);
-        else if (metadata.Labels.Keys.Contains(THIRD_VERSION_LABEL))
+        else if (metadata.Labels.ContainsKey(THIRD_VERSION_LABEL))
             result = Result.Ok(metadata.Labels[THIRD_VERSION_LABEL]);
 
         result = Result.Fail("Not able to discern the version from the deployment");

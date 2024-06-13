@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Kontroller.API.Services;
-using Kontroller.API.Todos;
 using Kontroller.API.Versions;
 
 namespace Kontroller.API;
@@ -20,9 +19,7 @@ public static class Program
 
             // Register
             app.MapHealthChecks("/healthz");
-            TodoEndpoints.RegisterEndpoints(app);
-            var versionEndpoints = new VersionEndpoints();
-            versionEndpoints.RegisterEndpoints(app);
+            app.MapVersionEndpoints();
             
             // Run
             Console.WriteLine("noëlle moody"); // Save. Noëlle's first line of code.
@@ -43,9 +40,6 @@ public static class Program
     {
         var builder = WebApplication.CreateSlimBuilder();
 
-        builder.Logging.ClearProviders();
-        builder.Logging.AddConsole();
-
         var env = builder.Environment.EnvironmentName;
         builder.WebHost.UseKestrel(options => { options.ListenAnyIP(8080); });
         builder.Services.ConfigureHttpJsonOptions(options =>
@@ -63,17 +57,32 @@ public static class Program
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
         builder.Services.AddHealthChecks();    
         builder.Services.AddSingleton<KubernetesService>();
+        builder.Services.AddTransient<VersionEndpoints>();
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
         
         return builder.Build();
     }
 }
 
-[JsonSerializable(typeof(Todo))]
-[JsonSerializable(typeof(Todo[]))]
-[JsonSerializable(typeof(List<Todo>))]
 [JsonSerializable(typeof(TargetVersion))]
 [JsonSerializable(typeof(TargetVersion[]))]
 [JsonSerializable(typeof(List<TargetVersion>))]
 internal sealed partial class SourceGenerationContext : JsonSerializerContext
 {
+}
+
+internal static class VersionEndpointExtensions
+{
+    internal static WebApplication MapVersionEndpoints(this WebApplication webApplication)
+    {
+        var group = webApplication.MapGroup("/versions");
+        group.MapGet("/", async (context) =>
+        {
+            var service = context.RequestServices.GetRequiredService<VersionEndpoints>();
+            await service.GetVersions();
+
+        });
+        return webApplication;
+    }
 }
