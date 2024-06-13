@@ -7,6 +7,7 @@ namespace Kontroller.API.Services;
 
 internal sealed class KubernetesService : IKubernetesService
 {
+    private readonly ILogger _logger;
     private readonly KubernetesClientConfiguration _config = KubernetesClientConfiguration.InClusterConfig();
     private readonly Kubernetes _client;
     private static readonly string FIRST_VERSION_LABEL = "app.kubernetes.io/version";
@@ -14,8 +15,9 @@ internal sealed class KubernetesService : IKubernetesService
     private static readonly string THIRD_VERSION_LABEL = "version";
         
 
-    public KubernetesService()
+    public KubernetesService(ILogger<KubernetesService> logger)
     {
+        _logger = logger;
         _client = new Kubernetes(_config);
     }
 
@@ -43,14 +45,16 @@ internal sealed class KubernetesService : IKubernetesService
 
     public async Task<TargetVersion[]> GetDeployments()
     {
+        _logger.LogInformation("Searching for Deployments...");
         var deployments = await _client.ListDeploymentForAllNamespacesAsync();
+        _logger.LogInformation($"Found {deployments.Items.Count} Deployments...");
         
         TargetVersion[] versions = [];
         if (deployments.Items.Any())
         {
             foreach (var deployment in deployments.Items)
             {
-                Console.WriteLine($"Found a Deployment: {deployment.Name()}");
+                _logger.LogInformation($"Found a Deployment: {deployment.Name()}");
                 var result = DiscernDeploymentVersion(deployment);
                 if (result.IsSuccess)
                 {
@@ -58,7 +62,8 @@ internal sealed class KubernetesService : IKubernetesService
                 }
                 else
                 {
-                    Console.Write($"Could not discern version for Deployment: {deployment.Name}");
+                    _logger.LogWarning($"Could not discern version for Deployment: {deployment.Name}");
+                    _logger.LogWarning($"{result.Errors}");
                 }
             }
         }

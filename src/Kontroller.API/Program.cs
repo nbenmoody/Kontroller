@@ -42,6 +42,9 @@ public static class Program
     {
         var builder = WebApplication.CreateSlimBuilder();
 
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
+
         var env = builder.Environment.EnvironmentName;
         builder.WebHost.UseKestrel(options => { options.ListenAnyIP(8080); });
         builder.Services.ConfigureHttpJsonOptions(options =>
