@@ -8,9 +8,6 @@
     <PublishAot>true</PublishAot>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <OptimizationPreference>Speed</OptimizationPreference>
-<!--    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
-<!--    <EnableNETAnalysers>True</EnableNETAnalysers>-->
-<!--    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>-->
     <AnalysisLevel>latest-all</AnalysisLevel>
     <LangVersion>preview</LangVersion>
     <ServerGarbageCollection>false</ServerGarbageCollection>
@@ -25,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.15.2" />
-    <PackageReference Include="KubernetesClient" Version="14.0.2" />
+    <PackageReference Include="KubernetesClient.Aot" Version="14.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

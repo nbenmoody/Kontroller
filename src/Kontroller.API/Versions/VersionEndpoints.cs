@@ -1,7 +1,5 @@
-using System.Runtime.CompilerServices;
 using Kontroller.API.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Kontroller.API.Versions;
 
@@ -35,6 +33,6 @@ internal class VersionEndpoints(IKubernetesService _kubernetesService)
         {
             Console.WriteLine($"{result.Name} - {result.VersionNumber}");
         }
-        return results.IsNullOrEmpty() ? TypedResults.NotFound() : TypedResults.Ok(results);
+        return results.Any() ? TypedResults.Ok(results) : TypedResults.NotFound();
     }
 }
