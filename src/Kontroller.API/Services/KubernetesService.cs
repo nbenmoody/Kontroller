@@ -50,6 +50,7 @@ internal sealed class KubernetesService : IKubernetesService
         {
             foreach (var deployment in deployments.Items)
             {
+                Console.WriteLine($"Found a Deployment: {deployment.Name()}");
                 var result = DiscernDeploymentVersion(deployment);
                 if (result.IsSuccess)
                 {

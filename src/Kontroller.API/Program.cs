@@ -40,7 +40,7 @@ public static class Program
 
     private static WebApplication BuildWebHost()
     {
-        var builder = WebApplication.CreateBuilder();
+        var builder = WebApplication.CreateSlimBuilder();
 
         var env = builder.Environment.EnvironmentName;
         builder.WebHost.UseKestrel(options => { options.ListenAnyIP(8080); });
