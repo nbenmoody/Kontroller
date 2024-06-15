@@ -57,7 +57,7 @@ public static class Program
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
         builder.Services.AddHealthChecks();    
         builder.Services.AddSingleton<KubernetesService>();
-        builder.Services.AddTransient<VersionEndpoints>();
+        builder.Services.AddSingleton<VersionEndpoints>();
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
         
@@ -86,3 +86,15 @@ internal static class VersionEndpointExtensions
         return webApplication;
     }
 }
+
+
+
+// Host terminated unexpectedly:Some services are not able to be constructed (Error while validating the service descriptor 
+// 'ServiceType: Kontroller.API.Versions.VersionEndpoints Lifetime: Transient ImplementationType: Kontroller.API.Versions.VersionEndpoints': 
+// Unable to resolve service for type 'Kontroller.API.Services.IKubernetesService' while attempting to activate 
+// 'Kontroller.API.Versions.VersionEndpoints'.)
+// at Microsoft.Extensions.DependencyInjection.ServiceProvider..ctor(ICollection`1, ServiceProviderOptions) + 0x45c
+// at Microsoft.Extensions.DependencyInjection.ServiceCollectionContainerBuilderExtensions.BuildServiceProvider(IServiceCollection, ServiceProviderOptions) + 0x3c
+// at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build() + 0x44
+// at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build() + 0x94
+// at Kontroller.API.Program.Main() + 0x14

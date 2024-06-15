@@ -24,8 +24,6 @@ internal class VersionEndpoints : IVersionEndpoints
             _logger.LogInformation($"{result.Name} - {result.VersionNumber}");
         }
         return results.Length != 0 ? TypedResults.Ok(results) : TypedResults.NotFound();
-        TargetVersion[] versions = [];
-        return TypedResults.Ok(versions);
     }
 
     public void Dispose()
