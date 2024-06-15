@@ -83,7 +83,7 @@ internal static class VersionEndpointExtensions
         var group = webApplication.MapGroup("/versions");
         group.MapGet("/", async (context) =>
         {
-            var service = context.RequestServices.GetRequiredService<TargetVersionEndpointsService>();
+            var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
             await service.GetVersions();
         });
     }
