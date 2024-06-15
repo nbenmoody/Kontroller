@@ -1,14 +1,14 @@
 using Kontroller.API.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace Kontroller.API.Versions;
+namespace Kontroller.API.TargetVersions;
 
-internal class VersionEndpoints : IVersionEndpoints
+internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
 {
-    private readonly ILogger<VersionEndpoints> _logger;
+    private readonly ILogger<TargetVersionEndpointsService> _logger;
     private readonly IKubernetesService _kubernetesService;
 
-    public VersionEndpoints(ILogger<VersionEndpoints> logger, IKubernetesService kubernetesService)
+    public TargetVersionEndpointsService(ILogger<TargetVersionEndpointsService> logger, IKubernetesService kubernetesService)
     {
         _logger = logger;
         _kubernetesService = kubernetesService;

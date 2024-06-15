@@ -1,4 +1,4 @@
-namespace Kontroller.API.Versions;
+namespace Kontroller.API.TargetVersions;
 
 internal sealed class TargetVersion(string name, string version)
 {

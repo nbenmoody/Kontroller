@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace Kontroller.API.Versions;
+namespace Kontroller.API.TargetVersions;
 
-internal interface IVersionEndpoints : IDisposable
+internal interface ITargetVersionEndpointsService : IDisposable
 {
     public Task<Results<Ok<TargetVersion[]>, NotFound>> GetVersions();
 }
