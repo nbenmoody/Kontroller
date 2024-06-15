@@ -1,24 +1,24 @@
 using FluentResults;
 using k8s;
 using k8s.Models;
-using Kontroller.API.Versions;
+using Kontroller.API.Services;
+using Kontroller.API.TargetVersions;
 
-namespace Kontroller.API.Services;
+namespace Kontroller.API.Kubernetes;
 
 internal sealed class KubernetesService : IKubernetesService
 {
     private readonly ILogger _logger;
     private readonly KubernetesClientConfiguration _config = KubernetesClientConfiguration.InClusterConfig();
-    private readonly Kubernetes _client;
+    private readonly k8s.Kubernetes _client;
     private static readonly string FIRST_VERSION_LABEL = "app.kubernetes.io/version";
     private static readonly string SECOND_VERSION_LABEL = "app/version";
     private static readonly string THIRD_VERSION_LABEL = "version";
-        
 
-    public KubernetesService(ILogger<KubernetesService> logger)
+    public KubernetesService(ILogger<IKubernetesService> logger)
     {
         _logger = logger;
-        _client = new Kubernetes(_config);
+        _client = new k8s.Kubernetes(_config);
     }
 
     public void Dispose()

@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using Kontroller.API.Kubernetes;
 using Kontroller.API.Services;
 using Kontroller.API.TargetVersions;
 
@@ -62,7 +63,7 @@ public static class Program
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
         builder.Services.AddHealthChecks();    
         builder.Services.AddSingleton<KubernetesService>();
-        builder.Services.AddSingleton<TargetVersionEndpointsService>();
+        builder.Services.AddTransient<TargetVersionEndpointsService>();
         
         return builder.Build();
     }
