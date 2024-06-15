@@ -61,9 +61,9 @@ public static class Program
         builder.Logging.AddConsole();
 
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
-        builder.Services.AddHealthChecks();    
-        builder.Services.AddSingleton<KubernetesService>();
-        builder.Services.AddTransient<TargetVersionEndpointsService>();
+        builder.Services.AddHealthChecks();
+        builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
+        builder.Services.AddSingleton<ITargetVersionEndpointsService, TargetVersionEndpointsService>();
         
         return builder.Build();
     }
