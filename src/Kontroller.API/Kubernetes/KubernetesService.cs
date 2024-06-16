@@ -46,7 +46,21 @@ internal sealed class KubernetesService : IKubernetesService
         return result;
     }
 
-    public async Task<TargetVersion[]> GetDeployments()
+    public async Task<V1Deployment[]> GetDeployments()
+    {
+        _logger.LogWarning("Searching for Deployments...");
+        var deployments = await _client.ListDeploymentForAllNamespacesAsync();
+        _logger.LogInformation($"Found {deployments.Items.Count} Deployments...");
+
+        if (!deployments.Items.Any())
+        {
+            _logger.LogWarning("No V1Deployments found!");
+        }
+
+        return deployments.Items.ToArray(); // TODO: Return something more efficient here, in the future.
+    }
+
+    public async Task<TargetVersion[]> GetDeploymentVersions()
     {
         _logger.LogInformation("Searching for Deployments...");
         var deployments = await _client.ListDeploymentForAllNamespacesAsync();

@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Kontroller.API.Kubernetes;
+using Kontroller.API.Models;
 using Kontroller.API.Services;
 using Kontroller.API.TargetVersions;
 
@@ -69,6 +70,9 @@ public static class Program
     }
 }
 
+[JsonSerializable(typeof(Deployment))]
+[JsonSerializable(typeof(Deployment[]))]
+[JsonSerializable(typeof(List<Deployment>))]
 [JsonSerializable(typeof(TargetVersion))]
 [JsonSerializable(typeof(TargetVersion[]))]
 [JsonSerializable(typeof(List<TargetVersion>))]
@@ -88,11 +92,3 @@ internal static class VersionEndpointExtensions
         });
     }
 }
-
-
-// Host terminated unexpectedly:Some services are not able to be constructed (Error while validating the service descriptor 'ServiceType: Kontroller.API.Versions.VersionEndpoint │
-//     │    at Microsoft.Extensions.DependencyInjection.ServiceProvider..ctor(ICollection`1, ServiceProviderOptions) + 0x45c                                                            │
-//     │    at Microsoft.Extensions.DependencyInjection.ServiceCollectionContainerBuilderExtensions.BuildServiceProvider(IServiceCollection, ServiceProviderOptions) + 0x3c             │
-//     │    at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build() + 0x44                                                                                                       │
-//     │    at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build() + 0x94                                                                                                        │
-//     │    at Kontroller.API.Program.Main() + 0x14
