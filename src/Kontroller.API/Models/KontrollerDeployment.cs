@@ -2,12 +2,7 @@ using k8s.Models;
 
 namespace Kontroller.API.Models;
 
-internal class KontrollerDeployment
+internal class KontrollerDeployment(string name)
 {
-    public string Name { get; set; }
-
-    public KontrollerDeployment(V1Deployment v1Deployment)
-    {
-        Name = v1Deployment.Name();
-    }
+    public string Name { get; set; } = name;
 }

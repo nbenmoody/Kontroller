@@ -58,7 +58,8 @@ internal sealed class KubernetesService : IKubernetesService
         {
             foreach (var deployment in v1deployments)
             {
-                deployments.Append(new KontrollerDeployment(deployment));
+                _logger.LogWarning($"Found a Deployment: {deployment.Name()}");
+                deployments.Append(new KontrollerDeployment(deployment.Name()));
             }
         }
         else
@@ -91,8 +92,7 @@ internal sealed class KubernetesService : IKubernetesService
                 }
                 else
                 {
-                    _logger.LogWarning($"Could not discern version for Deployment: {deployment.Name}");
-                    _logger.LogWarning($"{result.Errors}");
+                    _logger.LogWarning($"Could not discern version for Deployment: {deployment.Name()}");
                 }
             }
         }
