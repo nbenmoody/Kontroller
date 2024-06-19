@@ -70,9 +70,9 @@ public static class Program
     }
 }
 
-[JsonSerializable(typeof(Deployment))]
-[JsonSerializable(typeof(Deployment[]))]
-[JsonSerializable(typeof(List<Deployment>))]
+[JsonSerializable(typeof(KontrollerDeployment))]
+[JsonSerializable(typeof(KontrollerDeployment[]))]
+[JsonSerializable(typeof(List<KontrollerDeployment>))]
 [JsonSerializable(typeof(TargetVersion))]
 [JsonSerializable(typeof(TargetVersion[]))]
 [JsonSerializable(typeof(List<TargetVersion>))]

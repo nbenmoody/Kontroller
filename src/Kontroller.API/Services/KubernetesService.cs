@@ -1,6 +1,7 @@
 using FluentResults;
 using k8s;
 using k8s.Models;
+using Kontroller.API.Models;
 using Kontroller.API.Services;
 using Kontroller.API.TargetVersions;
 
@@ -11,9 +12,9 @@ internal sealed class KubernetesService : IKubernetesService
     private readonly ILogger _logger;
     private readonly KubernetesClientConfiguration _config = KubernetesClientConfiguration.InClusterConfig();
     private readonly k8s.Kubernetes _client;
-    private static readonly string FIRST_VERSION_LABEL = "app.kubernetes.io/version";
-    private static readonly string SECOND_VERSION_LABEL = "app/version";
-    private static readonly string THIRD_VERSION_LABEL = "version";
+    private const string FIRST_VERSION_LABEL = "app.kubernetes.io/version";
+    private const string SECOND_VERSION_LABEL = "app/version";
+    private const string THIRD_VERSION_LABEL = "version";
 
     public KubernetesService(ILogger<IKubernetesService> logger)
     {
@@ -46,25 +47,36 @@ internal sealed class KubernetesService : IKubernetesService
         return result;
     }
 
-    public async Task<V1Deployment[]> GetDeployments()
+    public async Task<KontrollerDeployment[]> GetDeployments()
     {
         _logger.LogWarning("Searching for Deployments...");
-        var deployments = await _client.ListDeploymentForAllNamespacesAsync();
-        _logger.LogInformation($"Found {deployments.Items.Count} Deployments...");
-
-        if (!deployments.Items.Any())
+        var v1deployments = await _client.ListDeploymentForAllNamespacesAsync();
+        _logger.LogInformation($"Found {v1deployments.Items.Count} Deployments...");
+        
+        KontrollerDeployment[] deployments = [];
+        if (v1deployments.Items.Any())
+        {
+            foreach (var deployment in v1deployments)
+            {
+                deployments.Append(new KontrollerDeployment(deployment));
+            }
+        }
+        else
         {
             _logger.LogWarning("No V1Deployments found!");
         }
 
-        return deployments.Items.ToArray(); // TODO: Return something more efficient here, in the future.
+        return deployments;
     }
 
-    public async Task<TargetVersion[]> GetDeploymentVersions()
+    public async Task<TargetVersion[]> GetVersions()
     {
         _logger.LogInformation("Searching for Deployments...");
         var deployments = await _client.ListDeploymentForAllNamespacesAsync();
         _logger.LogInformation($"Found {deployments.Items.Count} Deployments...");
+        
+        // TODO: Gather more than just Deployments here. Helm Charts, ReplicaSets, Services, Etc.
+        //  Sort these by some determined precedence.
         
         TargetVersion[] versions = [];
         if (deployments.Items.Any())

@@ -16,32 +16,32 @@ internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
         _kubernetesService = kubernetesService;
     }
 
-    public async Task<Results<Ok<Deployment[]>, NotFound>> GetDeployments()
+    public async Task<Results<Ok<KontrollerDeployment[]>, NotFound>> GetDeployments()
     {
-        _logger.LogInformation("Scanning for V1Deployments...");
+        _logger.LogWarning("Scanning for Deployments...");
         var results = await _kubernetesService.GetDeployments();
         _logger.LogWarning($"Found {results.Length} Deployments.");
-        Deployment[] deployments = [];
+        
         foreach (var result in results)
         {
-            deployments.Append(new Deployment(result));
+            _logger.LogWarning($"Found a thing: {result.Name}");
         }
 
-        return deployments.Length == 0 ? TypedResults.NotFound() : TypedResults.Ok(deployments);
-
+        return results.Length == 0 ? TypedResults.NotFound() : TypedResults.Ok(results);
     }
 
     // TODO: Ultimately, I would see this looking at more than just Deployments (Helm charts, ReplicaSets, Rollouts,
-    //    or whatever else is set int he values.yaml file for the helm chart.
+    //    or whatever else is set in the values.yaml file for the helm chart.
     public async Task<Results<Ok<TargetVersion[]>, NotFound>> GetVersions()
     {
         // TODO: All these warnings need to be information instead.
         _logger.LogWarning($"Scanning for TargetVersions...");
-        var results = await _kubernetesService.GetDeploymentVersions();
-        _logger.LogInformation($"Found {results.Length} versions.");
+        var results = await _kubernetesService.GetVersions();
+        _logger.LogWarning($"Found {results.Length} versions.");
+        
         foreach (var result in results)
         {
-            _logger.LogInformation($"{result.Name} - {result.VersionNumber}");
+            _logger.LogWarning($"Found a thing: {result.Name} - {result.VersionNumber}");
         }
         return results.Length == 0 ? TypedResults.NotFound() : TypedResults.Ok(results);
     }
