@@ -35,21 +35,42 @@ internal sealed class KubernetesService : IKubernetesService
     {
         
         _logger.LogWarning($"Attempting to discern a version for {deployment.Name()}");
-        Result<string> result;
+        Result<string> result = Result.Fail("Not able to discern the version from the deployment");
         
         var metadata = deployment.EnsureMetadata();
+        _logger.LogWarning($"The labels on {deployment.Name()} are...");
+        foreach (var label in metadata.Labels)
+        {
+            _logger.LogWarning($"{label.Key}: {label.Value}");
+            
+        }
+        
         if (metadata is null)
+        {
+            _logger.LogWarning($"No metadata found for deployment {deployment.Name()}");
             result = Result.Fail("No metadata found for deployment");
+        }
         else if (!metadata.Labels.Any())
+        {
+            _logger.LogWarning("No labels found within the Deployment metadata.");
             result = Result.Fail("No labels found within the Deployment metadata.");
+        }
         else if (metadata.Labels.ContainsKey(FIRST_VERSION_LABEL))
+        {
+            _logger.LogWarning($"Matched {FIRST_VERSION_LABEL}");
             result = Result.Ok(metadata.Labels[FIRST_VERSION_LABEL]);
+        }
         else if (metadata.Labels.ContainsKey(SECOND_VERSION_LABEL))
+        {
+            _logger.LogWarning($"Matched {SECOND_VERSION_LABEL}");
             result = Result.Ok(metadata.Labels[SECOND_VERSION_LABEL]);
+        }
         else if (metadata.Labels.ContainsKey(THIRD_VERSION_LABEL))
+        {
+            _logger.LogWarning($"Matched {THIRD_VERSION_LABEL}");
             result = Result.Ok(metadata.Labels[THIRD_VERSION_LABEL]);
+        }
 
-        result = Result.Fail("Not able to discern the version from the deployment");
         return result;
     }
 
@@ -76,7 +97,7 @@ internal sealed class KubernetesService : IKubernetesService
         return deployments;
     }
 
-    public async Task<TargetVersion[]> GetVersions()
+    public async Task<List<TargetVersion>> GetVersions()
     {
         _logger.LogWarning("Searching for Deployments...");
         var deployments = await _client.ListDeploymentForAllNamespacesAsync();
@@ -84,8 +105,8 @@ internal sealed class KubernetesService : IKubernetesService
         
         // TODO: Gather more than just Deployments here. Helm Charts, ReplicaSets, Services, Etc.
         //  Sort these by some determined precedence.
-        
-        TargetVersion[] versions = [];
+
+        var versions = new List<TargetVersion>();
         if (deployments.Items.Any())
         {
             foreach (var deployment in deployments.Items)
@@ -94,7 +115,7 @@ internal sealed class KubernetesService : IKubernetesService
                 var result = DiscernDeploymentVersion(deployment);
                 if (result.IsSuccess)
                 {
-                    versions.Append(new TargetVersion(deployment.Name(), result.Value));
+                    versions.Add(new TargetVersion(deployment.Name(), result.Value));
                 }
                 else
                 {
@@ -103,6 +124,7 @@ internal sealed class KubernetesService : IKubernetesService
             }
         }
 
+        _logger.LogWarning($"Returning {versions.Count} versions...");
         return versions;
     }
 }

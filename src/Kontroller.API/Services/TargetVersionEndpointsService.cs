@@ -16,7 +16,7 @@ internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
         _kubernetesService = kubernetesService;
     }
 
-    public async Task<Results<Ok<KontrollerDeployment[]>, NotFound>> GetDeployments()
+    public async Task<Results<Ok<List<KontrollerDeployment>>, NotFound>> GetDeployments()
     {
         _logger.LogWarning("Scanning for Deployments...");
         var results = await _kubernetesService.GetDeployments();
@@ -27,23 +27,23 @@ internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
             _logger.LogWarning($"Found a thing: {result.Name}");
         }
 
-        return results.Length == 0 ? TypedResults.NotFound() : TypedResults.Ok(results);
+        return results.Length == 0 ? TypedResults.NotFound() : TypedResults.Ok(results.ToList());
     }
 
     // TODO: Ultimately, I would see this looking at more than just Deployments (Helm charts, ReplicaSets, Rollouts,
     //    or whatever else is set in the values.yaml file for the helm chart.
-    public async Task<Results<Ok<TargetVersion[]>, NotFound>> GetVersions()
+    public async Task<Results<Ok<List<TargetVersion>>, NotFound>> GetVersions()
     {
         // TODO: All these warnings need to be information instead.
         _logger.LogWarning($"Scanning for TargetVersions...");
         var results = await _kubernetesService.GetVersions();
-        _logger.LogWarning($"Found {results.Length} versions.");
+        _logger.LogWarning($"Found {results.Count} versions.");
         
         foreach (var result in results)
         {
             _logger.LogWarning($"Found a thing: {result.Name} - {result.VersionNumber}");
         }
-        return results.Length == 0 ? TypedResults.NotFound() : TypedResults.Ok(results);
+        return results.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(results);
     }
 
     public void Dispose()

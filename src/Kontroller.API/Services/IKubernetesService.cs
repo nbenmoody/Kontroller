@@ -7,5 +7,5 @@ namespace Kontroller.API.Services;
 internal interface IKubernetesService : IDisposable
 {
     public Task<KontrollerDeployment[]> GetDeployments();
-    public Task<TargetVersion[]> GetVersions();
+    public Task<List<TargetVersion>> GetVersions();
 }
