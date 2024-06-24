@@ -27,8 +27,10 @@ internal sealed class KubernetesService : IKubernetesService
         _client.Dispose();
     }
 
-    private static Result<string> DiscernDeploymentVersion(V1Deployment deployment)
+    private Result<string> DiscernDeploymentVersion(V1Deployment deployment)
     {
+        
+        _logger.LogWarning($"Attempting to discern a version for {deployment.Name()}");
         Result<string> result;
         
         var metadata = deployment.EnsureMetadata();
@@ -72,9 +74,9 @@ internal sealed class KubernetesService : IKubernetesService
 
     public async Task<TargetVersion[]> GetVersions()
     {
-        _logger.LogInformation("Searching for Deployments...");
+        _logger.LogWarning("Searching for Deployments...");
         var deployments = await _client.ListDeploymentForAllNamespacesAsync();
-        _logger.LogInformation($"Found {deployments.Items.Count} Deployments...");
+        _logger.LogWarning($"Found {deployments.Items.Count} Deployments...");
         
         // TODO: Gather more than just Deployments here. Helm Charts, ReplicaSets, Services, Etc.
         //  Sort these by some determined precedence.
@@ -84,7 +86,7 @@ internal sealed class KubernetesService : IKubernetesService
         {
             foreach (var deployment in deployments.Items)
             {
-                _logger.LogInformation($"Found a Deployment: {deployment.Name()}");
+                _logger.LogWarning($"Found a Deployment: {deployment.Name()}");
                 var result = DiscernDeploymentVersion(deployment);
                 if (result.IsSuccess)
                 {
