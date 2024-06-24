@@ -1,4 +1,6 @@
+using System.Text.Json;
 using FluentResults;
+using System.Text.Json;
 using k8s;
 using k8s.Models;
 using Kontroller.API.Models;
@@ -12,6 +14,7 @@ internal sealed class KubernetesService : IKubernetesService
     private readonly ILogger _logger;
     private readonly KubernetesClientConfiguration _config = KubernetesClientConfiguration.InClusterConfig();
     private readonly k8s.Kubernetes _client;
+    private JsonSerializerOptions _jsonoptions;
     private const string FIRST_VERSION_LABEL = "app.kubernetes.io/version";
     private const string SECOND_VERSION_LABEL = "app/version";
     private const string THIRD_VERSION_LABEL = "version";
@@ -20,6 +23,7 @@ internal sealed class KubernetesService : IKubernetesService
     {
         _logger = logger;
         _client = new k8s.Kubernetes(_config);
+        _jsonoptions = new JsonSerializerOptions { WriteIndented = true }; 
     }
 
     public void Dispose()
@@ -53,7 +57,7 @@ internal sealed class KubernetesService : IKubernetesService
     {
         _logger.LogWarning("Searching for Deployments...");
         var v1deployments = await _client.ListDeploymentForAllNamespacesAsync();
-        _logger.LogInformation($"Found {v1deployments.Items.Count} Deployments...");
+        _logger.LogWarning($"Found {v1deployments.Items.Count} Deployments...");
         
         KontrollerDeployment[] deployments = [];
         if (v1deployments.Items.Any())
