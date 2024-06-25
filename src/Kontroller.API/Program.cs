@@ -97,7 +97,7 @@ internal static class KubernetesEndpointExtensions
         var group = webApplication.MapGroup("/kubernetes");
         group.MapGet("/deployments", async (context) =>
         {
-            var service = context.RequestServices.GetRequiredService<IKubernetesService>();
+            var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
             await service.GetDeployments();
         });
     }
