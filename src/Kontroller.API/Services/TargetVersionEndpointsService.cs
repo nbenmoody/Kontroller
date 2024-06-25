@@ -29,11 +29,10 @@ internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
         return results.Length == 0 ? TypedResults.NotFound() : TypedResults.Ok(results.ToList());
     }
 
-    // TODO: Ultimately, I would see this looking at more than just Deployments (Helm charts, ReplicaSets, Rollouts,
-    //    or whatever else is set in the values.yaml file for the helm chart.
+    // TODO: This should be the aggregate method, calling down to the specific ones (Deployments, Services, Rollouts, etc...) and returning them all.
     public async Task<Results<Ok<List<TargetVersion>>, NotFound>> GetVersions()
     {
-        // TODO: All these warnings need to be information instead.
+        // TODO: All these warnings need to be information instead. Just here for convenience right now.
         _logger.LogWarning($"Scanning for TargetVersions...");
         var results = await _kubernetesService.GetVersions();
         _logger.LogWarning($"Found {results.Count} versions.");

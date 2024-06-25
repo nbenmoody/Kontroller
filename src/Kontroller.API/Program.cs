@@ -88,17 +88,25 @@ internal static class VersionEndpointExtensions
             var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
             await service.GetVersions();
         });
-    }
-}
-internal static class KubernetesEndpointExtensions
-{
-    internal static void MapKubernetesEndpoints(this WebApplication webApplication)
-    {
-        var group = webApplication.MapGroup("/kubernetes");
         group.MapGet("/deployments", async (context) =>
         {
             var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
             await service.GetDeployments();
         });
+        // group.MapGet("/services", async (context) =>
+        // {
+        //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
+        //     await service.GetDeployments();
+        // });
+        // group.MapGet("/charts", async (context) =>
+        // {
+        //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
+        //     await service.GetDeployments();
+        // });
+        // group.MapGet("/rollouts", async (context) =>
+        // {
+        //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
+        //     await service.GetDeployments();
+        // });
     }
 }
