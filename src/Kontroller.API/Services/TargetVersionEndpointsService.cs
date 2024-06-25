@@ -41,7 +41,7 @@ internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
         {
             _logger.LogWarning($"Found a thing: {result.Name} - {result.VersionNumber}");
         }
-        return results.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(results);
+        return results.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(results.ToList());
     }
 
     public void Dispose()

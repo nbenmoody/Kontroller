@@ -6,6 +6,6 @@ namespace Kontroller.API.Services;
 
 internal interface ITargetVersionEndpointsService : IDisposable
 {
-    public Task<Results<Ok<List<KontrollerDeployment>>, NotFound>> GetDeployments();
     public Task<Results<Ok<List<TargetVersion>>, NotFound>> GetVersions();
+    public Task<Results<Ok<List<KontrollerDeployment>>, NotFound>> GetDeployments();
 }
