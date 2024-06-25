@@ -1,7 +1,8 @@
 using Kontroller.API.Models;
+using Kontroller.API.TargetVersions;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace Kontroller.API.TargetVersions;
+namespace Kontroller.API.Services;
 
 internal interface ITargetVersionEndpointsService : IDisposable
 {

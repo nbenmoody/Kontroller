@@ -1,9 +1,8 @@
-using k8s.Models;
 using Kontroller.API.Models;
-using Kontroller.API.Services;
+using Kontroller.API.TargetVersions;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace Kontroller.API.TargetVersions;
+namespace Kontroller.API.Services;
 
 internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
 {

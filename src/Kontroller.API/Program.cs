@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
-using Kontroller.API.Kubernetes;
 using Kontroller.API.Models;
 using Kontroller.API.Services;
 using Kontroller.API.TargetVersions;
@@ -72,10 +71,8 @@ public static class Program
 }
 
 [JsonSerializable(typeof(KontrollerDeployment))]
-[JsonSerializable(typeof(KontrollerDeployment[]))]
 [JsonSerializable(typeof(List<KontrollerDeployment>))]
 [JsonSerializable(typeof(TargetVersion))]
-[JsonSerializable(typeof(TargetVersion[]))]
 [JsonSerializable(typeof(List<TargetVersion>))]
 internal sealed partial class SourceGenerationContext : JsonSerializerContext
 {
