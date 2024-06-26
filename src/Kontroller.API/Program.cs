@@ -21,7 +21,6 @@ public static class Program
             // Register
             app.MapHealthChecks("/healthz");
             app.MapVersionEndpoints();
-            app.MapKubernetesEndpoints();
             
             // Run
             Console.WriteLine("noëlle moody"); // Save. Noëlle's first line of code.
