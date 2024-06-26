@@ -3,7 +3,6 @@ using FluentResults;
 using k8s;
 using k8s.Models;
 using Kontroller.API.Models;
-using Kontroller.API.TargetVersions;
 
 namespace Kontroller.API.Services;
 
@@ -95,7 +94,7 @@ internal sealed class KubernetesService : IKubernetesService
         return deployments;
     }
 
-    public async Task<List<TargetVersion>> GetVersions()
+    public async Task<List<KontrollerVersion>> GetVersions()
     {
         _logger.LogWarning("Searching for Deployments...");
         var deployments = await _client.ListDeploymentForAllNamespacesAsync();
@@ -104,7 +103,7 @@ internal sealed class KubernetesService : IKubernetesService
         // TODO: Gather more than just Deployments here. Helm Charts, ReplicaSets, Services, Etc.
         //  Sort these by some determined precedence.
 
-        var versions = new List<TargetVersion>();
+        var versions = new List<KontrollerVersion>();
         if (deployments.Items.Any())
         {
             foreach (var deployment in deployments.Items)
@@ -113,7 +112,7 @@ internal sealed class KubernetesService : IKubernetesService
                 var result = DiscernDeploymentVersion(deployment);
                 if (result.IsSuccess)
                 {
-                    versions.Add(new TargetVersion(deployment.Name(), result.Value));
+                    versions.Add(new KontrollerVersion(deployment.Name(), result.Value));
                 }
                 else
                 {

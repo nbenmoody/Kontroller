@@ -1,6 +1,6 @@
-namespace Kontroller.API.TargetVersions;
+namespace Kontroller.API.Models;
 
-internal sealed class TargetVersion(string name, string version)
+internal sealed class KontrollerVersion(string name, string version)
 {
     public string Name { get; set; } = name;
     public string VersionNumber { get; set; } = version;

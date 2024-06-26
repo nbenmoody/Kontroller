@@ -1,15 +1,14 @@
 using Kontroller.API.Models;
-using Kontroller.API.TargetVersions;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Kontroller.API.Services;
 
-internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
+internal class KontrollerEndpointsService : IKontrollerEndpointsService
 {
-    private readonly ILogger<ITargetVersionEndpointsService> _logger;
+    private readonly ILogger<IKontrollerEndpointsService> _logger;
     private readonly IKubernetesService _kubernetesService;
 
-    public TargetVersionEndpointsService(ILogger<ITargetVersionEndpointsService> logger, IKubernetesService kubernetesService)
+    public KontrollerEndpointsService(ILogger<IKontrollerEndpointsService> logger, IKubernetesService kubernetesService)
     {
         _logger = logger;
         _kubernetesService = kubernetesService;
@@ -30,7 +29,7 @@ internal class TargetVersionEndpointsService : ITargetVersionEndpointsService
     }
 
     // TODO: This should be the aggregate method, calling down to the specific ones (Deployments, Services, Rollouts, etc...) and returning them all.
-    public async Task<Results<Ok<List<TargetVersion>>, NotFound>> GetVersions()
+    public async Task<Results<Ok<List<KontrollerVersion>>, NotFound>> GetVersions()
     {
         // TODO: All these warnings need to be information instead. Just here for convenience right now.
         _logger.LogWarning($"Scanning for TargetVersions...");

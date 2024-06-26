@@ -2,7 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Kontroller.API.Models;
 using Kontroller.API.Services;
-using Kontroller.API.TargetVersions;
 
 namespace Kontroller.API;
 
@@ -63,7 +62,7 @@ public static class Program
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
         builder.Services.AddHealthChecks();
         builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
-        builder.Services.AddSingleton<ITargetVersionEndpointsService, TargetVersionEndpointsService>();
+        builder.Services.AddSingleton<IKontrollerEndpointsService, KontrollerEndpointsService>();
         
         return builder.Build();
     }
@@ -71,8 +70,8 @@ public static class Program
 
 [JsonSerializable(typeof(KontrollerDeployment))]
 [JsonSerializable(typeof(List<KontrollerDeployment>))]
-[JsonSerializable(typeof(TargetVersion))]
-[JsonSerializable(typeof(List<TargetVersion>))]
+[JsonSerializable(typeof(KontrollerVersion))]
+[JsonSerializable(typeof(List<KontrollerVersion>))]
 internal sealed partial class SourceGenerationContext : JsonSerializerContext
 {
 }
@@ -84,28 +83,28 @@ internal static class VersionEndpointExtensions
         var group = webApplication.MapGroup("/k8s");
         group.MapGet("/versions", async (context) =>
         {
-            var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
+            var service = context.RequestServices.GetRequiredService<IKontrollerEndpointsService>();
             await service.GetVersions();
         });
         group.MapGet("/deployments", async (context) =>
         {
-            var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
+            var service = context.RequestServices.GetRequiredService<IKontrollerEndpointsService>();
             await service.GetDeployments();
         });
         // group.MapGet("/services", async (context) =>
         // {
         //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
-        //     await service.GetDeployments();
+        //     await service.GetServices();
         // });
         // group.MapGet("/charts", async (context) =>
         // {
         //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
-        //     await service.GetDeployments();
+        //     await service.GetCharts();
         // });
         // group.MapGet("/rollouts", async (context) =>
         // {
         //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
-        //     await service.GetDeployments();
+        //     await service.GetRollouts();
         // });
     }
 }
