@@ -1,9 +1,10 @@
+using System.Text.Json;
 using Kontroller.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Kontroller.API.Services;
 
-internal class KontrollerEndpointsService : IKontrollerEndpointsService
+internal sealed class KontrollerEndpointsService : IKontrollerEndpointsService
 {
     private readonly ILogger<IKontrollerEndpointsService> _logger;
     private readonly IKubernetesService _kubernetesService;
@@ -40,7 +41,10 @@ internal class KontrollerEndpointsService : IKontrollerEndpointsService
         {
             _logger.LogWarning($"Found a thing: {result.Name} - {result.VersionNumber}");
         }
-        return results.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(results.ToList());
+        
+        return results.Count == 0 
+            ? TypedResults.NotFound() 
+            : TypedResults.Ok(results.ToList());
     }
 
     public void Dispose()

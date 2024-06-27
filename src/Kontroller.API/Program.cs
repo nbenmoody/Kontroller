@@ -24,6 +24,7 @@ public static class Program
             // Run
             Console.WriteLine("noëlle moody"); // Save. Noëlle's first line of code.
             Console.WriteLine("bunny moody");
+            Console.WriteLine("001");
             Console.WriteLine($"Running the application as if it's in this env: {app.Environment.EnvironmentName}");
             app.Run();
             return 0;
