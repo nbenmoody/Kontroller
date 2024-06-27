@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using FluentResults;
 using Kontroller.API.Models;
 using Kontroller.API.Services;
 
@@ -22,9 +23,9 @@ public static class Program
             app.MapVersionEndpoints();
             
             // Run
+            Console.WriteLine("006");
             Console.WriteLine("noëlle moody"); // Save. Noëlle's first line of code.
             Console.WriteLine("bunny moody");
-            Console.WriteLine("002");
             Console.WriteLine($"Running the application as if it's in this env: {app.Environment.EnvironmentName}");
             app.Run();
             return 0;
@@ -82,16 +83,20 @@ internal static class VersionEndpointExtensions
     internal static void MapVersionEndpoints(this WebApplication webApplication)
     {
         var group = webApplication.MapGroup("/k8s");
+        
         group.MapGet("/versions", async (context) =>
         {
             var service = context.RequestServices.GetRequiredService<IKontrollerEndpointsService>();
             await service.GetVersions();
         });
+        
         group.MapGet("/deployments", async (context) =>
         {
             var service = context.RequestServices.GetRequiredService<IKontrollerEndpointsService>();
             await service.GetDeployments();
         });
+        
+        
         // group.MapGet("/services", async (context) =>
         // {
         //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();

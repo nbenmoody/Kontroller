@@ -47,8 +47,8 @@ internal sealed class KontrollerEndpointsService : IKontrollerEndpointsService
         //     : TypedResults.Ok(results.ToList());
 
         return TypedResults.Ok(new List<KontrollerVersion>{
-            new KontrollerVersion("test1", "5.4.3"),
-            new KontrollerVersion("test2", "8.7.6")
+            new("test1", "5.4.3"),
+            new("test2", "8.7.6")
         });
     }
 
