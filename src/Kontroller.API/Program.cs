@@ -91,9 +91,8 @@ internal static class VersionEndpointExtensions
         //         ? TypedResults.Ok(todo)
         //         : TypedResults.NotFound());
         
-        group.MapGet("/versions", async Results<Ok<List<KontrollerVersion>>,NotFound> (context) =>
+        group.MapGet("/versions", async Task<Results<Ok<List<KontrollerVersion>>, NotFound>> (IKontrollerEndpointsService service) =>
         {
-            var service = context.RequestServices.GetRequiredService<IKontrollerEndpointsService>();
             var response = await service.GetVersions();
             return response;
         });
