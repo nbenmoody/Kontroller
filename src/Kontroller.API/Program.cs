@@ -84,6 +84,13 @@ internal static class VersionEndpointExtensions
     {
         var group = webApplication.MapGroup("/k8s");
         
+        // TODO: this is the pattern. What is the issue with the RequestDelegate, below???
+        // group.MapGet("/todoitems/{id}", async Task<Results<Ok<KontrollerVersion>, NotFound>> (int id, TodoDb db) =>
+        //     await db.Todos.FindAsync(id)
+        //         is Todo todo
+        //         ? TypedResults.Ok(todo)
+        //         : TypedResults.NotFound());
+        
         group.MapGet("/versions", async Results<Ok<List<KontrollerVersion>>,NotFound> (context) =>
         {
             var service = context.RequestServices.GetRequiredService<IKontrollerEndpointsService>();
