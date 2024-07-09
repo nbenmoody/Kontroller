@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
-using FluentResults;
 using Kontroller.API.Models;
 using Kontroller.API.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Kontroller.API;
 
@@ -84,10 +84,11 @@ internal static class VersionEndpointExtensions
     {
         var group = webApplication.MapGroup("/k8s");
         
-        group.MapGet("/versions", async (context) =>
+        group.MapGet("/versions", async Results<Ok<List<KontrollerVersion>>,NotFound> (context) =>
         {
             var service = context.RequestServices.GetRequiredService<IKontrollerEndpointsService>();
-            await service.GetVersions();
+            var response = await service.GetVersions();
+            return response;
         });
         
         group.MapGet("/deployments", async (context) =>
