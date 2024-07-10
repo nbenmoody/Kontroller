@@ -41,14 +41,9 @@ internal sealed class KontrollerEndpointsService : IKontrollerEndpointsService
             _logger.LogWarning($"Found a thing: {result.Name} - {result.VersionNumber}");
         }
         
-        // var returnValue = results.Count == 0 
-        //     ? TypedResults.NotFound() 
-        //     : TypedResults.Ok(results.ToList());
-
-        return TypedResults.Ok(new List<KontrollerVersion>{
-            new("test1", "5.4.3"),
-            new("test2", "8.7.6")
-        });
+        return results.Count == 0 
+            ? TypedResults.NotFound() 
+            : TypedResults.Ok(results.ToList());
     }
 
     public void Dispose()
