@@ -84,23 +84,17 @@ internal static class VersionEndpointExtensions
     {
         var group = webApplication.MapGroup("/k8s");
         
-        // TODO: this is the pattern. What is the issue with the RequestDelegate, below???
-        // group.MapGet("/todoitems/{id}", async Task<Results<Ok<KontrollerVersion>, NotFound>> (int id, TodoDb db) =>
-        //     await db.Todos.FindAsync(id)
-        //         is Todo todo
-        //         ? TypedResults.Ok(todo)
-        //         : TypedResults.NotFound());
-        
+        // TODO: I want to pull from configuration on these calls, to determine namespace, or even regex against object names, and/or labels to match against, things like that.
         group.MapGet("/versions", async Task<Results<Ok<List<KontrollerVersion>>, NotFound>> (IKontrollerEndpointsService service) =>
         {
             var response = await service.GetVersions();
             return response;
         });
         
-        group.MapGet("/deployments", async (context) =>
+        group.MapGet("/deployments", async Task<Results<Ok<List<KontrollerDeployment>>, NotFound>> (IKontrollerEndpointsService service) =>
         {
-            var service = context.RequestServices.GetRequiredService<IKontrollerEndpointsService>();
-            await service.GetDeployments();
+            var response = await service.GetDeployments();
+            return response;
         });
         
         

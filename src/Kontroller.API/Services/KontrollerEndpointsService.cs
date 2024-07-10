@@ -18,14 +18,14 @@ internal sealed class KontrollerEndpointsService : IKontrollerEndpointsService
     {
         _logger.LogWarning("Scanning for Deployments...");
         var results = await _kubernetesService.GetDeployments();
-        _logger.LogWarning($"Found {results.Length} Deployments.");
+        _logger.LogWarning($"Found {results.Count} Deployments.");
         
         foreach (var result in results)
         {
             _logger.LogWarning($"Found a thing: {result.Name}");
         }
 
-        return results.Length == 0 ? TypedResults.NotFound() : TypedResults.Ok(results.ToList());
+        return results.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(results.ToList());
     }
 
     // TODO: This should be the aggregate method, calling down to the specific ones (Deployments, Services, Rollouts, etc...) and returning them all.

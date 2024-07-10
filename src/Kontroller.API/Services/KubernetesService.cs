@@ -71,19 +71,19 @@ internal sealed class KubernetesService : IKubernetesService
         return result;
     }
 
-    public async Task<KontrollerDeployment[]> GetDeployments()
+    public async Task<List<KontrollerDeployment>> GetDeployments()
     {
         _logger.LogWarning("Searching for Deployments...");
         var v1deployments = await _client.ListDeploymentForAllNamespacesAsync();
         _logger.LogWarning($"Found {v1deployments.Items.Count} Deployments...");
-        
-        KontrollerDeployment[] deployments = [];
+
+        var deployments = new List<KontrollerDeployment>();
         if (v1deployments.Items.Any())
         {
-            foreach (var deployment in v1deployments)
+            foreach (var deployment in v1deployments.Items)
             {
                 _logger.LogWarning($"Found a Deployment: {deployment.Name()}");
-                deployments.Append(new KontrollerDeployment(deployment.Name()));
+                deployments.Add(new KontrollerDeployment(deployment.Name()));
             }
         }
         else
@@ -91,6 +91,7 @@ internal sealed class KubernetesService : IKubernetesService
             _logger.LogWarning("No V1Deployments found!");
         }
 
+        _logger.LogWarning($"Returning {deployments.Count} deployments...");
         return deployments;
     }
 
