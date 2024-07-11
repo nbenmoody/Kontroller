@@ -82,6 +82,8 @@ internal sealed partial class SourceGenerationContext : JsonSerializerContext
 
 internal static class VersionEndpointExtensions
 {
+    
+    // TODO: Initially, I just want to get all the object types returning. Then I can refactor into more configurable/intelligent version-detection.
     internal static void MapVersionEndpoints(this WebApplication webApplication)
     {
         var group = webApplication.MapGroup("/k8s");
@@ -99,13 +101,13 @@ internal static class VersionEndpointExtensions
             return response;
         });
         
-        
         group.MapGet("/services", async Task<Results<Ok<List<KontrollerService>>, NotFound>> (IKontrollerEndpointsService service) =>
         {
             var response = await service.GetServices();
             return response;
         });
         
+        // Probably need this for these: https://github.com/kubernetes-client/csharp/blob/master/examples/customResource/CustomResourceDefinition.cs
         // TODO: Helm Charts
         
         // TODO: Argo Rollouts
