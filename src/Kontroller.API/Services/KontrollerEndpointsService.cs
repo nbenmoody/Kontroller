@@ -13,6 +13,20 @@ internal sealed class KontrollerEndpointsService : IKontrollerEndpointsService
         _logger = logger;
         _kubernetesService = kubernetesService;
     }
+    
+    public async Task<Results<Ok<List<KontrollerService>>, NotFound>> GetServices()
+    {
+        _logger.LogWarning("Scanning for Services...");
+        var results = await _kubernetesService.GetServices();
+        _logger.LogWarning($"Found {results.Count} Services.");
+        
+        foreach (var result in results)
+        {
+            _logger.LogWarning($"Found a thing: {result.Name}");
+        }
+
+        return results.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(results.ToList());
+    }
 
     public async Task<Results<Ok<List<KontrollerDeployment>>, NotFound>> GetDeployments()
     {

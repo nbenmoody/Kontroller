@@ -70,6 +70,8 @@ public static class Program
     }
 }
 
+[JsonSerializable(typeof(KontrollerService))]
+[JsonSerializable(typeof(List<KontrollerService>))]
 [JsonSerializable(typeof(KontrollerDeployment))]
 [JsonSerializable(typeof(List<KontrollerDeployment>))]
 [JsonSerializable(typeof(KontrollerVersion))]
@@ -98,20 +100,15 @@ internal static class VersionEndpointExtensions
         });
         
         
-        // group.MapGet("/services", async (context) =>
-        // {
-        //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
-        //     await service.GetServices();
-        // });
-        // group.MapGet("/charts", async (context) =>
-        // {
-        //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
-        //     await service.GetCharts();
-        // });
-        // group.MapGet("/rollouts", async (context) =>
-        // {
-        //     var service = context.RequestServices.GetRequiredService<ITargetVersionEndpointsService>();
-        //     await service.GetRollouts();
-        // });
+        group.MapGet("/services", async Task<Results<Ok<List<KontrollerService>>, NotFound>> (IKontrollerEndpointsService service) =>
+        {
+            var response = await service.GetServices();
+            return response;
+        });
+        
+        // TODO: Helm Charts
+        
+        // TODO: Argo Rollouts
+        
     }
 }

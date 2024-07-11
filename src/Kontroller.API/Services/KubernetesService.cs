@@ -70,17 +70,41 @@ internal sealed class KubernetesService : IKubernetesService
 
         return result;
     }
+    
+    public async Task<List<KontrollerService>> GetServices()
+    {
+        _logger.LogWarning("Searching for Services...");
+        var v1Services = await _client.ListServiceForAllNamespacesAsync();
+        _logger.LogWarning($"Found {v1Services.Items.Count} Services...");
+
+        var services = new List<KontrollerService>();
+        if (v1Services.Items.Any())
+        {
+            foreach (var service in v1Services.Items)
+            {
+                _logger.LogWarning($"Found a Service: {service.Name()}");
+                services.Add(new KontrollerService(service.Name()));
+            }
+        }
+        else
+        {
+            _logger.LogWarning("No Services found!");
+        }
+
+        _logger.LogWarning($"Returning {services.Count} Services...");
+        return services;
+    }
 
     public async Task<List<KontrollerDeployment>> GetDeployments()
     {
         _logger.LogWarning("Searching for Deployments...");
-        var v1deployments = await _client.ListDeploymentForAllNamespacesAsync();
-        _logger.LogWarning($"Found {v1deployments.Items.Count} Deployments...");
+        var v1Deployments = await _client.ListDeploymentForAllNamespacesAsync();
+        _logger.LogWarning($"Found {v1Deployments.Items.Count} Deployments...");
 
         var deployments = new List<KontrollerDeployment>();
-        if (v1deployments.Items.Any())
+        if (v1Deployments.Items.Any())
         {
-            foreach (var deployment in v1deployments.Items)
+            foreach (var deployment in v1Deployments.Items)
             {
                 _logger.LogWarning($"Found a Deployment: {deployment.Name()}");
                 deployments.Add(new KontrollerDeployment(deployment.Name()));
