@@ -107,10 +107,16 @@ internal static class VersionEndpointExtensions
             return response;
         });
         
-        // Probably need this for these: https://github.com/kubernetes-client/csharp/blob/master/examples/customResource/CustomResourceDefinition.cs
         // TODO: Helm Charts
-        
+        group.MapGet("/charts", async Task<Results<Ok<List<KontrollerChart>>, NotFound>> (IKubernetesService service) =>
+        {
+            var response = await service.GetHelmChartVersions();
+            return response.Count > 0
+                ? TypedResults.Ok(response)
+                : TypedResults.NotFound();
+        });
+
         // TODO: Argo Rollouts
-        
+
     }
 }
