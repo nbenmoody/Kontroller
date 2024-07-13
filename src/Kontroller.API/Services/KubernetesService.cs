@@ -158,28 +158,35 @@ internal sealed class KubernetesService : IKubernetesService
         // Query for ConfigMaps with a label indicating they are Helm releases
         var configMaps = await _client.ListConfigMapForAllNamespacesAsync(labelSelector: "OWNER=TILLER");
 
-        foreach (var configMap in configMaps.Items)
+        if (configMaps.Items.Any())
         {
-            Console.WriteLine($"Release Name: {configMap.Metadata.Name}");
-            Console.WriteLine($"Namespace: {configMap.Metadata.NamespaceProperty}");
-            Console.WriteLine($"Labels: {string.Join(", ", configMap.Metadata.Labels)}");
-            Console.WriteLine($"Annotations: {string.Join(", ", configMap.Metadata.Annotations)}");
-            Console.WriteLine();
-            charts.Add(new KontrollerChart(configMap.Metadata.Name));
+            foreach (var configMap in configMaps.Items)
+            {
+                Console.WriteLine($"Release Name: {configMap.Metadata.Name}");
+                Console.WriteLine($"Namespace: {configMap.Metadata.NamespaceProperty}");
+                Console.WriteLine($"Labels: {string.Join(", ", configMap.Metadata.Labels)}");
+                Console.WriteLine($"Annotations: {string.Join(", ", configMap.Metadata.Annotations)}");
+                Console.WriteLine();
+                charts.Add(new KontrollerChart(configMap.Metadata.Name));
+            }
         }
 
         // Query for Secrets with a label indicating they are Helm releases
         var secrets = await _client.ListSecretForAllNamespacesAsync(labelSelector: "owner=helm");
 
-        foreach (var secret in secrets.Items)
+        if (secrets.Items.Any())
         {
-            Console.WriteLine($"Release Name: {secret.Metadata.Name}");
-            Console.WriteLine($"Namespace: {secret.Metadata.NamespaceProperty}");
-            Console.WriteLine($"Labels: {string.Join(", ", secret.Metadata.Labels)}");
-            Console.WriteLine($"Annotations: {string.Join(", ", secret.Metadata.Annotations)}");
-            Console.WriteLine();
-            charts.Add(new KontrollerChart(secret.Metadata.Name));
+            foreach (var secret in secrets.Items)
+            {
+                Console.WriteLine($"Release Name: {secret.Metadata.Name}");
+                Console.WriteLine($"Namespace: {secret.Metadata.NamespaceProperty}");
+                Console.WriteLine($"Labels: {string.Join(", ", secret.Metadata.Labels)}");
+                Console.WriteLine($"Annotations: {string.Join(", ", secret.Metadata.Annotations)}");
+                Console.WriteLine();
+                charts.Add(new KontrollerChart(secret.Metadata.Name));
+            }
         }
+
         return charts;
     }
     
