@@ -14,6 +14,20 @@ internal sealed class KontrollerEndpointsService : IKontrollerEndpointsService
         _kubernetesService = kubernetesService;
     }
     
+    public async Task<Results<Ok<List<KontrollerChart>>, NotFound>> GetHelmCharts()
+    {
+        _logger.LogWarning("Scanning for Helm Charts...");
+        var results = await _kubernetesService.GetHelmCharts();
+        _logger.LogWarning($"Found {results.Count} Helm Charts.");
+        
+        foreach (var result in results)
+        {
+            _logger.LogWarning($"Found a thing: {result.Name}");
+        }
+
+        return results.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(results.ToList());
+    }
+    
     public async Task<Results<Ok<List<KontrollerService>>, NotFound>> GetServices()
     {
         _logger.LogWarning("Scanning for Services...");

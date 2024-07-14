@@ -108,12 +108,10 @@ internal static class VersionEndpointExtensions
         });
         
         // TODO: Helm Charts
-        group.MapGet("/charts", async Task<Results<Ok<List<KontrollerChart>>, NotFound>> (IKubernetesService service) =>
+        group.MapGet("/charts", async Task<Results<Ok<List<KontrollerChart>>, NotFound>> (IKontrollerEndpointsService service) =>
         {
-            var response = await service.GetHelmChartVersions();
-            return response.Count > 0
-                ? TypedResults.Ok(response)
-                : TypedResults.NotFound();
+            var response = await service.GetHelmCharts();
+            return response;
         });
 
         // TODO: Argo Rollouts

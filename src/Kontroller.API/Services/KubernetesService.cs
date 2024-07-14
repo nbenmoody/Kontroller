@@ -151,7 +151,7 @@ internal sealed class KubernetesService : IKubernetesService
         return versions;
     }
 
-    public async Task<List<KontrollerChart>> GetHelmChartVersions()
+    public async Task<List<KontrollerChart>> GetHelmCharts()
     {
         var charts = new List<KontrollerChart>();
         
