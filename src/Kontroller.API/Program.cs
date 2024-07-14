@@ -70,6 +70,8 @@ public static class Program
     }
 }
 
+[JsonSerializable((typeof(KontrollerChart)))]
+[JsonSerializable(typeof(List<KontrollerChart>))]
 [JsonSerializable(typeof(KontrollerService))]
 [JsonSerializable(typeof(List<KontrollerService>))]
 [JsonSerializable(typeof(KontrollerDeployment))]

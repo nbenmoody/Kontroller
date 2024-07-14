@@ -162,11 +162,7 @@ internal sealed class KubernetesService : IKubernetesService
         {
             foreach (var configMap in configMaps.Items)
             {
-                Console.WriteLine($"Release Name: {configMap.Metadata.Name}");
-                Console.WriteLine($"Namespace: {configMap.Metadata.NamespaceProperty}");
-                Console.WriteLine($"Labels: {string.Join(", ", configMap.Metadata.Labels)}");
-                Console.WriteLine($"Annotations: {string.Join(", ", configMap.Metadata.Annotations)}");
-                Console.WriteLine();
+                _logger.LogWarning($"Found a chart: {configMap.Labels()["name"]}");
                 charts.Add(new KontrollerChart(configMap.Metadata.Name));
             }
         }
@@ -178,11 +174,7 @@ internal sealed class KubernetesService : IKubernetesService
         {
             foreach (var secret in secrets.Items)
             {
-                Console.WriteLine($"Release Name: {secret.Metadata.Name}");
-                Console.WriteLine($"Namespace: {secret.Metadata.NamespaceProperty}");
-                Console.WriteLine($"Labels: {string.Join(", ", secret.Metadata.Labels)}");
-                Console.WriteLine($"Annotations: {string.Join(", ", secret.Metadata.Annotations)}");
-                Console.WriteLine();
+                _logger.LogWarning($"Found a chart: {secret.Labels()["name"]}");
                 charts.Add(new KontrollerChart(secret.Metadata.Name));
             }
         }
