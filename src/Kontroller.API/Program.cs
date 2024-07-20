@@ -64,8 +64,11 @@ public static class Program
         // Configure Auth
         builder.Services.AddAuthentication().AddGoogle(googleOptions =>
         {
-            googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-            googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+            // TODO: Check these before trying them.
+            var clientId = System.Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+            var clientSecret= System.Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+            googleOptions.ClientId = clientId;
+            googleOptions.ClientSecret = clientSecret;
         });
 
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
