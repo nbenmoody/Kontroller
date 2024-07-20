@@ -23,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.15.2" />
     <PackageReference Include="KubernetesClient.Aot" Version="14.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

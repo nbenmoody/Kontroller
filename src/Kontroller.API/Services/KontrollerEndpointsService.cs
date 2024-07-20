@@ -60,7 +60,7 @@ internal sealed class KontrollerEndpointsService : IKontrollerEndpointsService
     public async Task<Results<Ok<List<KontrollerVersion>>, NotFound>> GetVersions()
     {
         // TODO: All these warnings need to be information instead. Just here for convenience right now.
-        _logger.LogWarning($"Scanning for TargetVersions...");
+        _logger.LogWarning($"Scanning for Versions...");
         var results = await _kubernetesService.GetVersions();
         _logger.LogWarning($"Found {results.Count} versions.");
         

@@ -60,6 +60,13 @@ public static class Program
         // Configure logging
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
+        
+        // Configure Auth
+        builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+        {
+            googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+            googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+        });
 
         // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
         builder.Services.AddHealthChecks();
