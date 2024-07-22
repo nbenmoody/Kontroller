@@ -39,6 +39,10 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT 
               value: {{ .Values.aspnetcore_env | default "Development" }}
+            - name: GOOGLE_CLIENT_ID 
+              value: {{ .Values.auth.google_client_id }}
+            - name: GOOGLE_CLIENT_SECRET
+              value: {{ .Values.auth.google_client_secret }}
           ports:
             - name: http
               containerPort: 8080
