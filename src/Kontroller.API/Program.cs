@@ -62,6 +62,7 @@ public static class Program
         builder.Logging.AddConsole();
         
         // Configure Auth
+        // Ref: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-8.0
         builder.Services.AddAuthentication().AddGoogle(googleOptions =>
         {
             // TODO: Check these before trying them.
@@ -71,7 +72,7 @@ public static class Program
             googleOptions.ClientSecret = clientSecret;
         });
 
-        // DI Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
+        // Ref: https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage
         builder.Services.AddHealthChecks();
         builder.Services.AddSingleton<IKubernetesService, KubernetesService>();
         builder.Services.AddSingleton<IKontrollerEndpointsService, KontrollerEndpointsService>();
