@@ -21,6 +21,8 @@ public static class Program
             // Register
             app.MapHealthChecks("/healthz");
             app.MapVersionEndpoints();
+            app.UseAuthentication();
+            app.UseAuthorization();
             
             // Run
             Console.WriteLine("006");
@@ -106,7 +108,7 @@ internal static class VersionEndpointExtensions
         {
             var response = await service.GetVersions();
             return response;
-        });
+        }).RequireAuthorization();
         
         group.MapGet("/deployments", async Task<Results<Ok<List<KontrollerDeployment>>, NotFound>> (IKontrollerEndpointsService service) =>
         {
@@ -120,7 +122,6 @@ internal static class VersionEndpointExtensions
             return response;
         });
         
-        // TODO: Helm Charts
         group.MapGet("/charts", async Task<Results<Ok<List<KontrollerChart>>, NotFound>> (IKontrollerEndpointsService service) =>
         {
             var response = await service.GetHelmCharts();
